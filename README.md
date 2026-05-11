@@ -1,4 +1,4 @@
-# 📚 BookHaven
+ # 📚 BookHaven
 **BookHaven** is a modern full-stack e-commerce platform for book enthusiasts, built using **FastAPI** and designed with a focus on performance, scalability, and user experience. It features a sleek Netflix-style UI, secure authentication, AI-powered recommendations, and complete order management.
 
 ---
@@ -18,8 +18,9 @@
 ### Backend
 * FastAPI
 * Python
-* SQLAlchemy
-* SQLite
+* MongoDB Atlas
+* Motor (Async Driver)
+* Pydantic
 
 ### Authentication
 * JWT Authentication
@@ -27,9 +28,9 @@
 * Python-Jose
 
 ### Frontend
-* HTML5
-* CSS3
-* JavaScript
+* **UI Framework:** Vanilla HTML5 & Modern CSS3
+* **Interactivity:** Asynchronous JavaScript (Fetch API)
+* **UX Features:** Real-time book search, Smooth hover effects, and Responsive layout
 
 ---
 
@@ -76,12 +77,6 @@ bookhaven/
 └── requirements.txt
 ```
 
----
-
-## 🎯 Future Improvements
-* Payment gateway integration
-* Advanced AI recommendation engine
-* Admin dashboard
 ---
 
 ## 👨‍💻 Author
