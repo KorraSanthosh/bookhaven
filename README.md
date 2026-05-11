@@ -82,8 +82,6 @@ bookhaven/
 * Payment gateway integration
 * Advanced AI recommendation engine
 * Admin dashboard
-* Docker & cloud deployment
-
 ---
 
 ## 👨‍💻 Author
