@@ -1,4 +1,4 @@
-# 📚 BookHaven
+ # 📚 BookHaven
 **BookHaven** is a modern full-stack e-commerce platform for book enthusiasts, built using **FastAPI** and designed with a focus on performance, scalability, and user experience. It features a sleek Netflix-style UI, secure authentication, AI-powered recommendations, and complete order management.
 
 ---
@@ -30,7 +30,10 @@
 ### Frontend
 * **UI Framework:** Vanilla HTML5 & Modern CSS3
 * **Interactivity:** Asynchronous JavaScript (Fetch API)
+<<<<<<< HEAD
 * **Design:** Premium Netflix-inspired Dark Mode
+=======
+>>>>>>> 530e001b6d1fd87bc6d49be9a3412fa495c2d1dd
 * **UX Features:** Real-time book search, Smooth hover effects, and Responsive layout
 
 ---
