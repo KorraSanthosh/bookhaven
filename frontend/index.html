@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookHaven | Luxury Literary Store</title>
+    <!-- Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root[data-theme="light"] {
+            --bg: #f9fbfd;
+            --surface: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #666666;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #e2e8f0;
+            --shadow: rgba(0, 0, 0, 0.05);
+            --card-hover: rgba(0, 0, 0, 0.08);
+            --toast-bg: #1a1a1a;
+            --toast-text: #ffffff;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
+        :root[data-theme="dark"] {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent: #818cf8;
+            --accent-hover: #6366f1;
+            --border: #334155;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --card-hover: rgba(255, 255, 255, 0.05);
+            --toast-bg: #f1f5f9;
+            --toast-text: #0f172a;
+            --danger: #f87171;
+            --success: #4ade80;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Outfit', sans-serif; background-color: var(--bg); color: var(--text-primary); line-height: 1.6; overflow-x: hidden; }
+
+        /* --- Header & Navigation --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            background: rgba(var(--surface), 0.8);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 700; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+        .logo-box { width: 32px; height: 32px; background: var(--accent); border-radius: 8px; }
+
+        .header-actions { display: flex; align-items: center; gap: 1.2rem; }
+        
+        .nav-links { display: flex; gap: 0.5rem; }
+        .nav-btn {
+            background: none; border: none; padding: 0.5rem 1.2rem;
+            color: var(--text-secondary); cursor: pointer; font-weight: 600;
+            border-radius: 12px; font-size: 0.95rem;
+        }
+        .nav-btn:hover { color: var(--accent); background: rgba(99,102,241,0.05); }
+        .nav-btn.active { color: var(--accent); background: rgba(99,102,241,0.1); }
+
+        .icon-btn {
+            background: none; border: 1px solid var(--border);
+            padding: 10px; border-radius: 12px; cursor: pointer;
+            color: var(--text-secondary); display: flex; align-items: center; justify-content: center;
+            position: relative;
+        }
+        .icon-btn:hover { color: var(--accent); border-color: var(--accent); background: rgba(99,102,241,0.05); }
+        .badge-count { position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; font-size: 0.65rem; padding: 2px 6px; border-radius: 10px; font-weight: 700; }
+
+        .btn-primary {
+            background: var(--accent); color: white; border: none;
+            padding: 0.7rem 1.5rem; border-radius: 12px; font-weight: 600; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 0.5rem;
+        }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
+
+        /* --- Main Content --- */
+        main { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; min-height: 80vh; }
+
+        .hero { text-align: center; margin-bottom: 4rem; animation: fadeIn 0.8s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .hero h1 { 
+            font-size: 3.5rem; 
+            margin-bottom: 0.8rem; 
+            background: linear-gradient(135deg, var(--accent), #f43f5e); 
+            background-clip: text;
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent; 
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+        .hero p { color: var(--text-secondary); font-size: 1.2rem; max-width: 600px; margin: 0 auto; }
+
+        /* --- Search & Filters --- */
+        .controls { display: flex; gap: 1rem; margin-bottom: 3rem; flex-wrap: wrap; align-items: center; }
+        .search-container { flex: 1; position: relative; min-width: 300px; }
+        .search-input {
+            width: 100%; padding: 1rem 1.2rem; border-radius: 16px;
+            border: 2px solid var(--border); background: var(--surface); color: var(--text-primary);
+            font-size: 1rem; outline: none;
+        }
+        .search-input:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(99,102,241,0.1); }
+        
+        .filters { display: flex; gap: 0.6rem; }
+        .filter-chip {
+            padding: 0.7rem 1.2rem; border-radius: 14px; border: 1px solid var(--border);
+            background: var(--surface); color: var(--text-secondary); cursor: pointer;
+            font-size: 0.9rem; font-weight: 600;
+        }
+        .filter-chip.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+        /* --- Grid & Cards --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2.5rem; }
+        .card {
+            background: var(--surface); border-radius: 24px; padding: 2rem;
+            border: 1px solid var(--border); box-shadow: 0 10px 20px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
+            cursor: pointer; display: flex; flex-direction: column;
+        }
+        .card:hover { transform: translateY(-12px); box-shadow: 0 25px 50px -12px var(--shadow); border-color: var(--accent); }
+        .card .badge { position: absolute; top: 1.5rem; right: 1.5rem; background: #fbbf24; color: #1e293b; padding: 4px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; z-index: 10; letter-spacing: 0.5px; }
+        
+        .card h3 { font-size: 1.4rem; margin-bottom: 0.6rem; font-weight: 700; color: var(--text-primary); }
+        .card .authors { color: var(--accent); font-size: 1rem; margin-bottom: 0.8rem; font-weight: 600; }
+        .card .cats { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+        .tag { font-size: 0.75rem; padding: 3px 10px; background: rgba(99,102,241,0.08); color: var(--accent); border-radius: 8px; font-weight: 600; }
+        
+        .card .summary { 
+            font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1.5rem; 
+            display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; 
+        }
+        .card .footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; border-top: 1px solid var(--border); padding-top: 1.2rem; }
+        .card .price { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
+        .card .stock-tag { font-size: 0.8rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+        .in-stock { background: rgba(34,197,94,0.1); color: var(--success); }
+        .out-stock { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+        /* --- Modal --- */
+        .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 2000; backdrop-filter: blur(8px); animation: fadeIn 0.3s; }
+        .modal { 
+            background: var(--surface); border-radius: 32px; padding: 3rem; 
+            max-width: 800px; width: 95%; max-height: 90vh; overflow-y: auto;
+            border: 1px solid var(--border); position: relative; box-shadow: 0 40px 60px -20px rgba(0,0,0,0.5);
+        }
+        .modal .close-btn { position: absolute; top: 2rem; right: 2rem; background: var(--bg); border: 1px solid var(--border); width: 44px; height: 44px; border-radius: 50%; font-size: 1.2rem; color: var(--text-secondary); cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .modal h2 { font-size: 2.5rem; margin-bottom: 1rem; font-weight: 800; }
+        
+        .book-details { display: grid; grid-template-columns: 1fr 2fr; gap: 2.5rem; margin-top: 2rem; }
+        @media (max-width: 600px) { .book-details { grid-template-columns: 1fr; } }
+        
+        .book-cover-placeholder { aspect-ratio: 2/3; background: linear-gradient(135deg, var(--accent), #f43f5e); border-radius: 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 3rem; font-weight: 800; box-shadow: 0 20px 40px -10px rgba(99,102,241,0.4); }
+
+        .reco-section { margin-top: 3rem; border-top: 2px solid var(--border); padding-top: 2rem; }
+        .reco-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .reco-card { background: var(--bg); padding: 1.2rem; border-radius: 20px; border: 1px solid var(--border); cursor: pointer; transition: all 0.3s; }
+        .reco-card:hover { border-color: var(--accent); transform: scale(1.03); background: var(--surface); }
+
+        /* --- Cart Panel --- */
+        .side-panel {
+            position: fixed; top: 0; right: 0; bottom: 0; width: 450px; 
+            background: var(--surface); z-index: 3000; padding: 2.5rem;
+            box-shadow: -20px 0 50px rgba(0,0,0,0.2); border-left: 1px solid var(--border);
+            transform: translateX(100%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex; flex-direction: column;
+        }
+        .side-panel.open { transform: translateX(0); }
+        .cart-items { flex: 1; overflow-y: auto; margin: 2rem 0; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+        .cart-item-info h4 { font-size: 1rem; margin-bottom: 0.2rem; }
+        .cart-item-info p { font-size: 0.85rem; color: var(--text-secondary); }
+        .qty-controls { display: flex; align-items: center; gap: 0.8rem; }
+        .qty-btn { width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text-primary); cursor: pointer; }
+
+        /* --- Auth Section --- */
+        .auth-view { max-width: 450px; margin: 4rem auto; background: var(--surface); padding: 3rem; border-radius: 32px; border: 1px solid var(--border); box-shadow: 0 30px 60px -12px var(--shadow); }
+        .auth-view h2 { margin-bottom: 1rem; text-align: center; font-size: 2rem; font-weight: 800; }
+        .auth-view p { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.6rem; font-size: 0.95rem; color: var(--text-secondary); font-weight: 600; }
+        .form-group input { width: 100%; padding: 1rem; border-radius: 14px; border: 2px solid var(--border); background: var(--bg); color: var(--text-primary); font-family: inherit; font-size: 1rem; outline: none; }
+        .form-group input:focus { border-color: var(--accent); }
+
+        /* --- Account / Orders --- */
+        .order-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 1.5rem; margin-bottom: 1.2rem; }
+        .order-header { display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1rem; }
+        .order-item-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 0.4rem; }
+
+        /* --- Toast Notifications --- */
+        #toast-container { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 0.8rem; z-index: 9999; }
+        .toast {
+            background: var(--toast-bg); color: var(--toast-text);
+            padding: 1rem 2rem; border-radius: 100px; font-weight: 700;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3); animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 1rem; min-width: 300px; justify-content: center;
+        }
+        @keyframes popUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .hidden { display: none !important; }
+        #status-indicator { font-size: 0.75rem; font-weight: 800; border-radius: 20px; padding: 4px 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .online { background: rgba(34,197,94,0.1); color: var(--success); }
+        .offline { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+        /* --- Skeleton Loaders --- */
+        .skeleton { background: linear-gradient(90deg, var(--border) 25%, var(--bg) 50%, var(--border) 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 12px; }
+        @keyframes loading { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+        .match-score { color: var(--success); font-weight: 800; font-size: 0.95rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem; }
+        .match-score::before { content: ''; width: 8px; height: 8px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); }
+
+        .format-badge { font-size: 0.65rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; text-transform: uppercase; margin-left: 0.5rem; }
+        .fmt-digital { background: rgba(99,102,241,0.1); color: var(--accent); }
+        .fmt-physical { background: rgba(251,191,36,0.1); color: #b45309; }
+        .fmt-both { background: rgba(34,197,94,0.1); color: var(--success); }
+
+        .cart-format-toggle { display: flex; gap: 4px; background: var(--bg); padding: 4px; border-radius: 10px; margin-top: 0.5rem; border: 1px solid var(--border); width: fit-content; }
+        .fmt-btn { border: none; background: none; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; cursor: pointer; color: var(--text-secondary); transition: all 0.2s; }
+        .fmt-btn.active { background: var(--accent); color: white; box-shadow: 0 4px 10px rgba(99,102,241,0.3); }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo" onclick="navigate('store')">
+        <div class="logo-box"></div>
+        <span>BookHaven</span>
+    </div>
+    
+    <div class="nav-links">
+        <button class="nav-btn active" id="nav-store" onclick="navigate('store')">Explore</button>
+        <button class="nav-btn" id="nav-categories" onclick="navigate('categories')">Collections</button>
+        <button class="nav-btn" id="nav-account" onclick="navigate('account')">My Haven</button>
+    </div>
+
+    <div class="header-actions">
+        <span id="status-indicator">Connecting...</span>
+        
+        <button class="icon-btn" onclick="toggleCart()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            <span class="badge-count hidden" id="cart-count">0</span>
+        </button>
+
+        <button class="icon-btn" onclick="toggleTheme()">
+            <svg id="theme-icon" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
+        </button>
+
+        <div id="user-context">
+            <button class="btn-primary" onclick="navigate('login')">Sign In</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <!-- Store View -->
+    <section id="view-store">
+        <div class="hero">
+            <h1>Curated Classics</h1>
+            <p>Elevate your digital library with our hand-picked collection of timeless literature and modern masterpieces.</p>
+        </div>
+
+        <div class="controls">
+            <div class="search-container">
+                <input type="text" class="search-input" id="search-input" placeholder="Search titles, authors, or curators..." oninput="debouncedSearch()">
+            </div>
+            <div id="category-badge" class="hidden" style="background: var(--accent); color: white; padding: 0.5rem 1rem; border-radius: 12px; display: flex; align-items: center; gap: 0.8rem; font-weight: 600; animation: fadeIn 0.3s;">
+                <span id="active-category-name"></span>
+                <button onclick="clearCategory()" style="background: rgba(255,255,255,0.2); border: none; color: white; cursor: pointer; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">&times;</button>
+            </div>
+            <div class="filters">
+                <button class="filter-chip" id="filter-featured" onclick="toggleFilter('featured')">Featured</button>
+                <button class="filter-chip" id="filter-stock" onclick="toggleFilter('stock')">Instant Delivery</button>
+            </div>
+        </div>
+
+        <div class="grid" id="books-grid">
+            <!-- Skeletons -->
+            <div class="card"><div class="skeleton" style="height: 200px;"></div></div>
+            <div class="card"><div class="skeleton" style="height: 200px;"></div></div>
+            <div class="card"><div class="skeleton" style="height: 200px;"></div></div>
+        </div>
+        <div id="loading-state" class="hidden" style="text-align:center; padding: 4rem; color: var(--text-secondary);">Curating your feed...</div>
+    </section>
+
+    <!-- Categories View -->
+    <section id="view-categories" class="hidden">
+        <h2 style="margin-bottom: 2.5rem; font-size: 2.5rem; font-weight: 800;">Curated Collections</h2>
+        <div class="grid" id="cats-grid"></div>
+    </section>
+
+    <!-- Login View -->
+    <section id="view-login" class="hidden">
+        <div class="auth-view">
+            <h2>Welcome Back</h2>
+            <p>Sign in to access your curated library and recommendations.</p>
+            <form onsubmit="event.preventDefault(); handleLogin();">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="curator@haven.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Continue</button>
+            </form>
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+                New to the Haven? <span style="color: var(--accent); font-weight: 700; cursor: pointer;" onclick="showAuthView('register')">Create an account</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Register View -->
+    <section id="view-register" class="hidden">
+        <div class="auth-view">
+            <h2>Join the Haven</h2>
+            <p>Create an account for personalized AI-powered book recommendations.</p>
+            <form onsubmit="event.preventDefault(); handleRegister();">
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" id="reg-name" placeholder="Alex Rivers" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" placeholder="curator@haven.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Get Started</button>
+            </form>
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.95rem; color: var(--text-secondary);">
+                Already a member? <span style="color: var(--accent); font-weight: 700; cursor: pointer;" onclick="showAuthView('login')">Sign In</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Account View -->
+    <section id="view-account" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3rem;">
+            <div>
+                <h2 style="font-size: 2.5rem; font-weight: 800;">My Haven</h2>
+                <p style="color:var(--text-secondary); margin-top: 0.5rem;">Managing account for <span id="user-display" style="color: var(--accent); font-weight: 700;">Guest</span></p>
+            </div>
+            <button class="btn-primary" style="background: var(--bg); color: var(--text-primary); border: 1px solid var(--border);" onclick="handleLogout()">Sign Out</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 3rem;">
+            <div>
+                <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Purchase History</h3>
+                <div id="orders-list">
+                    <div style="padding: 3rem; border: 2px dashed var(--border); border-radius: 24px; text-align: center; color: var(--text-secondary);">
+                        No acquisitions yet. Your library is waiting for its first addition.
+                    </div>
+                </div>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 1.5rem; font-weight: 700;">Personalized for You</h3>
+                <div id="personalized-reco" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <p style="font-size: 0.9rem; color: var(--text-secondary);">AI curated suggestions based on your taste will appear here once you've started your collection.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Shopping Cart Panel -->
+<div id="cart-panel" class="side-panel">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 1.8rem; font-weight: 800;">Your Selection</h2>
+        <button class="close-btn" style="background: none; border: none; font-size: 2rem; cursor: pointer;" onclick="toggleCart()">&times;</button>
+    </div>
+    
+    <div class="cart-items" id="cart-items-list">
+        <!-- Cart items here -->
+    </div>
+
+    <div style="border-top: 2px solid var(--border); padding-top: 2rem;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem; font-size: 1.2rem; font-weight: 700;">
+            <span>Total Value</span>
+            <span id="cart-total">$0.00</span>
+        </div>
+        <button class="btn-primary" style="width: 100%; justify-content: center; padding: 1.2rem; font-size: 1.1rem;" onclick="handleCheckout()">Secure Checkout</button>
+    </div>
+</div>
+
+<div id="modal-container"></div>
+<div id="toast-container"></div>
+
+<script>
+    const API_BASE = ""; // Use relative paths
+    let currentUser = null;
+    let token = localStorage.getItem('token');
+    let currentFilters = { featured: false, stock: false, category: null };
+    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    let searchTimeout;
+
+    // --- Auth Initialization ---
+    async function initAuth() {
+        if (!token) return;
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/me`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                currentUser = await res.json();
+                updateUIForUser();
+            } else {
+                handleLogout(); // Token expired or invalid
+            }
+        } catch {
+            console.error("Auth init failed");
+        }
+    }
+
+    function updateUIForUser() {
+        if (currentUser) {
+            document.getElementById('user-context').innerHTML = `
+                <div style="display:flex; align-items:center; gap:0.8rem; cursor:pointer;" onclick="navigate('account')">
+                    <div style="width:40px; height:40px; border-radius:14px; background:var(--accent); display:flex; align-items:center; justify-content:center; color:white; font-weight:800; font-size: 1.2rem;">
+                        ${currentUser.name.charAt(0).toUpperCase()}
+                    </div>
+                </div>
+            `;
+            document.getElementById('user-display').textContent = currentUser.name;
+            fetchPersonalizedRecommendations();
+            fetchOrders();
+        } else {
+            document.getElementById('user-context').innerHTML = `<button class="btn-primary" onclick="navigate('login')">Sign In</button>`;
+        }
+    }
+
+    // --- Navigation & Core UI ---
+    function navigate(view) {
+        document.querySelectorAll('main > section').forEach(el => el.classList.add('hidden'));
+        document.getElementById(`view-${view}`).classList.remove('hidden');
+        
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.id === `nav-${view}`);
+        });
+
+        if (view === 'store') fetchBooks();
+        if (view === 'categories') fetchCategories();
+        if (view === 'account') {
+            if (!currentUser) return navigate('login');
+            fetchOrders();
+            fetchPersonalizedRecommendations();
+        }
+        
+        // Reset category filter when leaving the store manually via nav if needed, 
+        // but typically we want it to persist until cleared.
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleFilter(type) {
+        currentFilters[type] = !currentFilters[type];
+        document.getElementById(`filter-${type}`).classList.toggle('active', currentFilters[type]);
+        fetchBooks();
+    }
+
+    function clearCategory() {
+        currentFilters.category = null;
+        document.getElementById('category-badge').classList.add('hidden');
+        fetchBooks();
+    }
+
+    function toggleTheme() {
+        const root = document.documentElement;
+        const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
+    }
+
+    function showToast(message, type = 'success') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.innerHTML = `
+            <span style="font-size: 1.2rem;">${type === 'success' ? '✔' : '⚠'}</span>
+            <span>${message}</span>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 4000);
+    }
+
+    // --- Book Logic ---
+    async function fetchBooks() {
+        const grid = document.getElementById('books-grid');
+        const loading = document.getElementById('loading-state');
+        loading.classList.remove('hidden');
+
+        try {
+            let url = `${API_BASE}/api/books/?per_page=12`;
+            if (currentUser) url += `&user_id=${currentUser.id || currentUser._id}`;
+            const search = document.getElementById('search-input').value;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+            if (currentFilters.featured) url += `&featured=true`;
+            if (currentFilters.stock) url += `&in_stock=true`;
+            if (currentFilters.category) url += `&category=${encodeURIComponent(currentFilters.category)}`;
+
+            const res = await fetch(url);
+            const data = await res.json();
+            
+            loading.classList.add('hidden');
+            grid.innerHTML = data.books.map(b => `
+                <div class="card" onclick="openBook('${b.id || b._id}')">
+                    ${b.featured ? '<div class="badge">CURATED</div>' : ''}
+                    <div style="height: 10px;"></div>
+                    ${b.match_percentage ? `<div class="match-score">${b.match_percentage}% Match</div>` : ''}
+                    <h3>${b.name}</h3>
+                    <p class="authors">${b.authors || 'Masterpiece'}</p>
+                    <div class="cats">
+                        ${(b.categories || 'Literature').split(',').map(c => `<span class="tag">${c.trim()}</span>`).join('')}
+                    </div>
+                    <p class="summary">${b.summary || 'A rare addition to your collection.'}</p>
+                    <div class="footer">
+                        <span class="price">$${b.price.toFixed(2)}</span>
+                        <span class="stock-tag ${b.stock > 0 ? 'in-stock' : 'out-stock'}">
+                            ${b.stock > 0 ? b.stock + ' units' : 'Acquired'}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        } catch (e) {
+            console.error(e);
+            loading.textContent = `Network Error: ${e.message}. Host: ${window.location.host}. Path: ${url}`;
+            loading.classList.remove('hidden');
+        }
+    }
+
+    function debouncedSearch() {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(fetchBooks, 500);
+    }
+
+    async function openBook(id) {
+        try {
+            const res = await fetch(`${API_BASE}/api/books/${id}`);
+            const b = await res.json();
+            
+            const recoRes = await fetch(`${API_BASE}/api/recommendations/${id}?top_n=3`);
+            const recoData = await recoRes.json();
+
+            const modalHtml = `
+                <div class="modal-bg" onclick="closeModal(event)">
+                    <div class="modal">
+                        <button class="close-btn" onclick="closeModal()">×</button>
+                        <div class="book-details">
+                            <div class="book-cover-placeholder">
+                                ${b.name.charAt(0)}
+                            </div>
+                            <div>
+                                <h2 style="font-size: 2.2rem;">${b.name}</h2>
+                                <p class="authors" style="font-size: 1.2rem;">by ${b.authors || 'Unknown'}</p>
+                                <div class="cats" style="margin: 1.5rem 0;">
+                                    ${(b.categories || '').split(',').map(c => `<span class="tag">${c.trim()}</span>`).join('')}
+                                </div>
+                                <p style="font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 2rem;">${b.summary || 'Details for this masterpiece are being curated.'}</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center; background: var(--bg); padding: 1.5rem; border-radius: 20px;">
+                                    <span style="font-size: 2rem; font-weight: 800;">$${b.price.toFixed(2)}</span>
+                                    <button class="btn-primary" onclick="addToCart('${b.id || b._id}', '${b.name.replace(/'/g, "\\'")}', ${b.price})">
+                                        Add to Collection
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="reco-section">
+                            <h3 style="font-weight: 800;">Similar Masterpieces</h3>
+                            <div class="reco-grid">
+                                ${recoData.recommendations.map(r => `
+                                    <div class="reco-card" onclick="openBook('${r.id || r._id}')">
+                                        <h4 style="margin-bottom: 0.5rem;">${r.name}</h4>
+                                        <p style="font-size: 0.8rem; color: var(--accent);">${r.authors}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal-container').innerHTML = modalHtml;
+        } catch {}
+    }
+
+    function closeModal(e) {
+        if (!e || e.target === e.currentTarget || e.target.classList.contains('close-btn')) {
+            document.getElementById('modal-container').innerHTML = '';
+        }
+    }
+
+    // --- Cart System ---
+    function toggleCart() {
+        document.getElementById('cart-panel').classList.toggle('open');
+        renderCart();
+    }
+
+    function addToCart(id, name, price) {
+        const existing = cart.find(i => i.id === id);
+        if (existing) {
+            existing.qty++;
+        } else {
+            cart.push({ id, name, price, qty: 1, format: 'digital' });
+        }
+        updateCartStorage();
+        showToast(`'${name}' added to your collection.`);
+        renderCart();
+    }
+
+    function updateCartStorage() {
+        localStorage.setItem('cart', JSON.stringify(cart));
+        const count = cart.reduce((acc, i) => acc + i.qty, 0);
+        const countBadge = document.getElementById('cart-count');
+        countBadge.textContent = count;
+        countBadge.classList.toggle('hidden', count === 0);
+    }
+
+    function renderCart() {
+        const list = document.getElementById('cart-items-list');
+        const totalEl = document.getElementById('cart-total');
+        
+        if (cart.length === 0) {
+            list.innerHTML = `<div style="text-align: center; padding: 4rem 0; opacity: 0.4;">Your collection is empty.</div>`;
+            totalEl.textContent = `$0.00`;
+            return;
+        }
+
+        list.innerHTML = cart.map((item, idx) => {
+            const adjustedPrice = calculateAdjustedPrice(item.price, item.format);
+            return `
+            <div class="cart-item">
+                <div class="cart-item-info">
+                    <h4>${item.name}</h4>
+                    <p style="font-weight:700; color:var(--accent);">$${adjustedPrice.toFixed(2)} <span style="font-size:0.7rem; color:var(--text-secondary); text-decoration:line-through; font-weight:400;">$${item.price.toFixed(2)}</span></p>
+                    <div class="cart-format-toggle">
+                        <button class="fmt-btn ${item.format === 'digital' ? 'active' : ''}" onclick="updateFormat(${idx}, 'digital')">PDF</button>
+                        <button class="fmt-btn ${item.format === 'physical' ? 'active' : ''}" onclick="updateFormat(${idx}, 'physical')">Print</button>
+                        <button class="fmt-btn ${item.format === 'both' ? 'active' : ''}" onclick="updateFormat(${idx}, 'both')">Bundle</button>
+                    </div>
+                </div>
+                <div class="qty-controls">
+                    <button class="qty-btn" onclick="updateQty(${idx}, -1)">-</button>
+                    <span style="font-weight: 800;">${item.qty}</span>
+                    <button class="qty-btn" onclick="updateQty(${idx}, 1)">+</button>
+                </div>
+            </div>
+        `}).join('');
+
+        const total = cart.reduce((acc, i) => acc + (calculateAdjustedPrice(i.price, i.format) * i.qty), 0);
+        totalEl.textContent = `$${total.toFixed(2)}`;
+    }
+
+    function calculateAdjustedPrice(base, format) {
+        if (format === 'digital') return base * 0.6;
+        if (format === 'both') return base * 1.3;
+        return base;
+    }
+
+    function updateQty(idx, delta) {
+        cart[idx].qty += delta;
+        if (cart[idx].qty <= 0) cart.splice(idx, 1);
+        updateCartStorage();
+        renderCart();
+    }
+
+    function updateFormat(idx, format) {
+        cart[idx].format = format;
+        updateCartStorage();
+        renderCart();
+        showToast(`Changed to ${format} format.`);
+    }
+
+    async function handleCheckout() {
+        if (!currentUser) {
+            showToast("Please Sign In to complete your acquisition.", "warning");
+            navigate('login');
+            toggleCart();
+            return;
+        }
+        if (cart.length === 0) return showToast("No items selected.", "warning");
+
+        const total = cart.reduce((acc, i) => acc + (calculateAdjustedPrice(i.price, i.format) * i.qty), 0);
+        
+        // Open Payment Modal
+        const modalHtml = `
+            <div class="modal-bg" id="pay-modal-bg">
+                <div class="modal" style="max-width: 500px;">
+                    <h2 style="text-align: center; margin-bottom: 2rem;">Secure Payment</h2>
+                    
+                    <div style="background: var(--bg); padding: 1.5rem; border-radius: 20px; margin-bottom: 2rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-secondary);">Total Amount</span>
+                            <span style="font-weight: 800; color: var(--accent); font-size: 1.2rem;">$${total.toFixed(2)}</span>
+                        </div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">Transaction secured via BookHaven Vault</div>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); startPaymentProcess();">
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" placeholder="xxxx xxxx xxxx xxxx" required maxlength="19" oninput="this.value = this.value.replace(/\\D/g, '').replace(/(.{4})/g, '$1 ').trim()">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Expiry</label>
+                                <input type="text" placeholder="MM/YY" required maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label>CVC</label>
+                                <input type="password" placeholder="•••" required maxlength="3">
+                            </div>
+                        </div>
+                        <button type="submit" id="pay-btn" class="btn-primary" style="width: 100%; justify-content: center; padding: 1.2rem; margin-top: 1rem;">
+                            Complete Purchase
+                        </button>
+                        <button type="button" onclick="closePayModal()" style="width: 100%; background: none; border: none; color: var(--text-secondary); margin-top: 1rem; cursor: pointer; font-weight: 600;">Cancel</button>
+                    </form>
+                </div>
+            </div>
+        `;
+        document.getElementById('modal-container').innerHTML = modalHtml;
+    }
+
+    function closePayModal() {
+        document.getElementById('modal-container').innerHTML = '';
+    }
+
+    async function startPaymentProcess() {
+        const btn = document.getElementById('pay-btn');
+        btn.disabled = true;
+        btn.innerHTML = `<span class="skeleton" style="width: 20px; height: 20px; border-radius: 50%; display: inline-block; margin-right: 10px;"></span> Processing...`;
+        
+        // Mock processing delay
+        setTimeout(async () => {
+            try {
+                const res = await fetch(`${API_BASE}/api/orders/`, {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        items: cart.map(i => ({ book_id: i.id, quantity: i.qty, price: calculateAdjustedPrice(i.price, i.format), format: i.format })),
+                        total_amount: cart.reduce((acc, i) => acc + (calculateAdjustedPrice(i.price, i.format) * i.qty), 0)
+                    })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showToast("Payment Authorized. Welcome to your Haven.");
+                    cart = [];
+                    updateCartStorage();
+                    closePayModal();
+                    if (document.getElementById('cart-panel').classList.contains('open')) toggleCart();
+                    fetchBooks();
+                    navigate('account'); // Take them to see their new order
+                } else {
+                    showToast(data.detail || "Transaction declined by bank.", "error");
+                    btn.disabled = false;
+                    btn.textContent = "Try Again";
+                }
+            } catch {
+                showToast("Connection to payment vault failed.", "error");
+                btn.disabled = false;
+                btn.textContent = "Retry";
+            }
+        }, 2000);
+    }
+
+    // --- Auth Actions ---
+    async function handleLogin() {
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                token = data.access_token;
+                localStorage.setItem('token', token);
+                await initAuth();
+                showToast("Welcome back to your literary Haven.");
+                navigate('store');
+            } else {
+                showToast("Invalid credentials. Please verify your clearance.", "error");
+            }
+        } catch {
+            showToast("Connection failed.", "error");
+        }
+    }
+
+    async function handleRegister() {
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const password = document.getElementById('reg-password').value;
+
+        try {
+            const res = await fetch(`${API_BASE}/api/auth/register`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+            if (res.ok) {
+                showToast("Welcome to the Haven. Please sign in.");
+                showAuthView('login');
+            } else {
+                const data = await res.json();
+                showToast(data.detail || "Membership request denied.", "error");
+            }
+        } catch {
+            showToast("Network error.", "error");
+        }
+    }
+
+    function handleLogout() {
+        token = null;
+        currentUser = null;
+        localStorage.removeItem('token');
+        updateUIForUser();
+        showToast("Session secured and closed.");
+        navigate('store');
+    }
+
+    async function openReader(bookId) {
+        try {
+            const res = await fetch(`${API_BASE}/api/books/${bookId}/read`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if (res.ok) {
+                const readerHtml = `
+                    <div class="modal-bg" style="padding: 0;">
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background: #000;">
+                            <div style="padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; background: #1a1a1a; color: white; border-bottom: 1px solid #333;">
+                                <h3 style="font-weight: 700;">Reading: ${data.title}</h3>
+                                <button onclick="closeModal()" style="background: none; border: 1px solid #444; color: white; padding: 0.5rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: 700;">Exit Reader</button>
+                            </div>
+                            <iframe src="${data.pdf_url}#toolbar=0" style="flex: 1; border: none; width: 100%;" title="PDF Reader"></iframe>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('modal-container').innerHTML = readerHtml;
+            } else {
+                showToast(data.detail || "Access to this title is restricted.", "error");
+            }
+        } catch {
+            showToast("Failed to connect to the Library Vault.", "error");
+        }
+    }
+
+    function showAuthView(type) {
+        document.getElementById('view-login').classList.add('hidden');
+        document.getElementById('view-register').classList.add('hidden');
+        document.getElementById(`view-${type}`).classList.remove('hidden');
+    }
+
+    async function fetchCategories() {
+        const grid = document.getElementById('cats-grid');
+        grid.innerHTML = '<div style="text-align:center; padding: 4rem; width: 100%;">Curating collections...</div>';
+        try {
+            const res = await fetch(`${API_BASE}/api/categories/`);
+            const data = await res.json();
+            grid.innerHTML = data.map(c => `
+                <div class="card" onclick="selectCategory('${c.name}')">
+                    <div style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.2;">📚</div>
+                    <h3>${c.name}</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Explore our hand-picked selection of ${c.name} masterpieces.</p>
+                    <div class="footer">
+                        <span class="tag" style="background: var(--accent); color: white;">View Collection</span>
+                    </div>
+                </div>
+            `).join('');
+        } catch {
+            grid.innerHTML = '<div style="text-align:center; padding: 4rem; width: 100%;">Failed to load collections.</div>';
+        }
+    }
+
+    function selectCategory(name) {
+        currentFilters.category = name;
+        navigate('store');
+        
+        // Update UI
+        const badge = document.getElementById('category-badge');
+        const nameEl = document.getElementById('active-category-name');
+        badge.classList.remove('hidden');
+        nameEl.textContent = name;
+        
+        const searchInput = document.getElementById('search-input');
+        searchInput.value = ''; // Clear search when selecting category
+        showToast(`Showing ${name} collection.`);
+    }
+
+    // --- Account / Recommendations ---
+    async function fetchOrders() {
+        if (!currentUser) return;
+        try {
+            const res = await fetch(`${API_BASE}/api/orders/my-orders`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            const list = document.getElementById('orders-list');
+            if (data.length === 0) {
+                list.innerHTML = `<div style="padding: 3rem; border: 2px dashed var(--border); border-radius: 24px; text-align: center; color: var(--text-secondary);">Your library awaits its first acquisition.</div>`;
+                return;
+            }
+            list.innerHTML = data.map(o => {
+                const orderId = o.id || o._id || "unknown";
+                return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Reference</p>
+                            <p style="font-weight: 800;">#${orderId.slice(-6).toUpperCase()}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <p style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase;">Value</p>
+                            <p style="font-weight: 800; color: var(--accent);">$${o.total_amount.toFixed(2)}</p>
+                        </div>
+                    </div>
+                    ${o.items.map(i => `
+                        <div class="order-item-row">
+                            <span style="display:flex; align-items:center; gap:1rem;">
+                                ${i.book_name} 
+                                <span class="format-badge ${i.format === 'digital' ? 'fmt-digital' : (i.format === 'both' ? 'fmt-both' : 'fmt-physical')}">${i.format}</span>
+                                <span style="opacity: 0.5;">x${i.quantity}</span>
+                                ${(i.format === 'digital' || i.format === 'both') ? `<button class="tag" style="background:var(--accent); color:white; border:none; cursor:pointer;" onclick="openReader('${i.book_id}')">Read Now</button>` : ''}
+                            </span>
+                            <span>$${(i.price * i.quantity).toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                    <div style="margin-top: 1rem; font-size: 0.7rem; color: var(--text-secondary);">Acquired on ${new Date(o.timestamp).toLocaleDateString()}</div>
+                </div>
+            `}).join('');
+        } catch (e) {
+            console.error("Fetch orders failed", e);
+            document.getElementById('orders-list').innerHTML = `<div style="color:var(--danger); text-align:center;">Failed to sync with the Haven Vault.</div>`;
+        }
+    }
+
+    async function fetchPersonalizedRecommendations() {
+        if (!currentUser) return;
+        try {
+            const res = await fetch(`${API_BASE}/api/recommendations/for-customer/${currentUser.id || currentUser._id}`);
+            const data = await res.json();
+            const container = document.getElementById('personalized-reco');
+            if (data.recommendations.length > 0) {
+                container.innerHTML = data.recommendations.map(r => `
+                    <div class="reco-card" onclick="openBook('${r.id || r._id}')">
+                        <h4 style="margin-bottom: 0.3rem;">${r.name}</h4>
+                        <p style="font-size: 0.8rem; color: var(--accent);">${r.authors}</p>
+                    </div>
+                `).join('');
+            }
+        } catch {}
+    }
+
+    async function checkHealth() {
+        try {
+            const res = await fetch(`${API_BASE}/health`);
+            const indicator = document.getElementById('status-indicator');
+            indicator.textContent = res.ok ? "● Haven Secure" : "⚠ Maintenance";
+            indicator.className = res.ok ? "online" : "offline";
+        } catch {
+            document.getElementById('status-indicator').className = "offline";
+            document.getElementById('status-indicator').textContent = "⚠ Offline";
+        }
+    }
+
+    // --- Init ---
+    initAuth();
+    checkHealth();
+    fetchBooks();
+    updateCartStorage();
+    
+    // Theme Initializer
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+</script>
+</body>
+</html>
